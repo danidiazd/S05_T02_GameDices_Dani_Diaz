@@ -118,8 +118,6 @@ public class DiceRollServiceMongoDB implements DiceRollService {
         boolean win = diceRoll.isWins();
         double successRate = calculateSuccessRate(diceRoll.getPlayer());
 
-
-
         return new DiceRollDTO(
                 diceRoll.getPlayer(),
                 diceRoll.getDice1(),
@@ -128,6 +126,17 @@ public class DiceRollServiceMongoDB implements DiceRollService {
                 win,
                 diceRoll.getPlayedOnDate(),
                 successRate
+        );
+    }
+    private PlayerDTO convertToPlayerDTO(Player player) {
+        double winRate = calculateSuccessRate(player.getId());
+        return new PlayerDTO(
+                player.getId(),
+                player.getEmail(),
+                player.getNick(),
+                player.getRole(),
+                winRate,
+                player.getRegistrationDate()
         );
     }
 
@@ -149,15 +158,5 @@ public class DiceRollServiceMongoDB implements DiceRollService {
         return (int) (Math.random() * 6) + 1;
     }
 
-    private PlayerDTO convertToPlayerDTO(Player player) {
-        double winRate = calculateSuccessRate(player.getId());
-        return new PlayerDTO(
-                player.getId(),
-                player.getEmail(),
-                player.getNick(),
-                player.getRole(),
-                winRate,
-                player.getRegistrationDate()
-        );
-    }
+
 }

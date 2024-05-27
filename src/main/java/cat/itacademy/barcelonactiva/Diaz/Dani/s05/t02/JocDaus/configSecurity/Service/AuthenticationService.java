@@ -4,6 +4,7 @@ package cat.itacademy.barcelonactiva.Diaz.Dani.s05.t02.JocDaus.configSecurity.Se
 import cat.itacademy.barcelonactiva.Diaz.Dani.s05.t02.JocDaus.configSecurity.Auth.LoginUser;
 import cat.itacademy.barcelonactiva.Diaz.Dani.s05.t02.JocDaus.configSecurity.Auth.RegisterUser;
 import cat.itacademy.barcelonactiva.Diaz.Dani.s05.t02.JocDaus.enums.Role;
+import cat.itacademy.barcelonactiva.Diaz.Dani.s05.t02.JocDaus.exceptions.BadCredentialsException;
 import cat.itacademy.barcelonactiva.Diaz.Dani.s05.t02.JocDaus.exceptions.PlayerNotFoundException;
 import cat.itacademy.barcelonactiva.Diaz.Dani.s05.t02.JocDaus.model.domain.Player;
 import cat.itacademy.barcelonactiva.Diaz.Dani.s05.t02.JocDaus.model.repository.PlayerRepository;
@@ -52,12 +53,16 @@ public class AuthenticationService {
     }
 
     public Player authenticate(LoginUser input) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        input.getEmail(),
-                        input.getPassword()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            input.getEmail(),
+                            input.getPassword()
+                    )
+            );
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException("Email or password is incorrect");
+        }
         return playerRepository.findUserByEmailIgnoreCase(input.getEmail())
                 .orElseThrow(() -> new PlayerNotFoundException("Player not found for email: " + input.getEmail()));
     }

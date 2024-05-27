@@ -30,6 +30,11 @@ public class GlobalExceptionHandler {
         return buildResponseEntity(errorMessage, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
+        return buildResponseEntity("Email or password is incorrect", HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(GameNotFoundException.class)
     public ResponseEntity<Object> handleGameNotFoundException(GameNotFoundException ex, WebRequest request) {
         return buildResponseEntity(ex.getMessage(), HttpStatus.NOT_FOUND);
